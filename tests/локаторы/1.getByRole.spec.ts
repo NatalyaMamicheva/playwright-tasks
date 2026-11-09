@@ -1,4 +1,4 @@
-// Начало
+// Начало с локаторов
 import { test, expect } from '@playwright/test';
 
 test.describe('Поиск элементов по роли "button"', () => {
