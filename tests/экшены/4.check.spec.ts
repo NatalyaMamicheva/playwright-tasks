@@ -15,28 +15,25 @@ test.describe('Работа с базовыми чекбоксами', () => {
   test('Изменение состояния чекбокса', async ({ page }) => {
     const newsletterCheckbox = page.getByLabel('Подписаться на рассылку');
     const status = page.locator('#newsletter-status');
-
     await expect(newsletterCheckbox).not.toBeChecked();
-    // твой код
+    await newsletterCheckbox.check();
     await expect(newsletterCheckbox).toBeChecked();
     await expect(status).toHaveText('Подписаны');
     await expect(status).toHaveClass(/checked/);
-
-    // твой код
+    await newsletterCheckbox.uncheck();
     await expect(newsletterCheckbox).not.toBeChecked();
     await expect(status).toHaveText('Не подписаны');
   });
 
-  // Тест 2: Проверка обязательного чекбокса
-  // 1. Найти обязательный чекбокс условий
-  // 2. Проверить наличие required атрибута
-  // 3. Выбрать чекбокс
-  // 4. Проверить что стал выбранным
+  // // Тест 2: Проверка обязательного чекбокса
+  // // 1. Найти обязательный чекбокс условий
+  // // 2. Проверить наличие required атрибута
+  // // 3. Выбрать чекбокс
+  // // 4. Проверить что стал выбранным
   test('Работа с обязательным чекбоксом', async ({ page }) => {
     const termsCheckbox = page.getByLabel('Я принимаю условия соглашения');
-
     await expect(termsCheckbox).toHaveAttribute('required', '');
-    // твой код
+    await termsCheckbox.check();
     await expect(termsCheckbox).toBeChecked();
   });
 });
@@ -54,26 +51,23 @@ test.describe('Сложные сценарии работы с check()', () => {
   test('Работа с кастомным чекбоксом после скролла', async ({ page }) => {
     const agreeCheckbox = page.getByLabel('Я прочитал и согласен с условиями');
     const tosContainer = page.locator('.tos-container');
-
     await tosContainer.scrollIntoViewIfNeeded();
-    // твой код
+    await agreeCheckbox.check();
     await expect(agreeCheckbox).toBeChecked();
   });
 
-  // Тест 2: Динамически добавляемые чекбоксы
-  // 1. Дождаться появления динамических чекбоксов
-  // 2. Найти чекбокс по label
-  // 3. Проверить что второй чекбокс выбран по умолчанию
-  // 4. Выбрать первый чекбокс
-  // 5. Проверить оба состояния
+  //   // Тест 2: Динамически добавляемые чекбоксы
+  //   // 1. Дождаться появления динамических чекбоксов
+  //   // 2. Найти чекбокс по label
+  //   // 3. Проверить что второй чекбокс выбран по умолчанию
+  //   // 4. Выбрать первый чекбокс
+  //   // 5. Проверить оба состояния
   test('Работа с динамически добавленными чекбоксами', async ({ page }) => {
     const dynamicCheckbox1 = page.getByLabel('Динамический чекбокс 1');
     const dynamicCheckbox2 = page.getByLabel('Динамический чекбокс 2');
-
     await expect(dynamicCheckbox1).toBeVisible({ timeout: 2000 });
     await expect(dynamicCheckbox2).toBeChecked();
-
-    // твой код
+    await dynamicCheckbox1.check();
     await expect(dynamicCheckbox1).toBeChecked();
     await expect(dynamicCheckbox2).toBeChecked();
   });
@@ -93,26 +87,28 @@ test.describe('Комплексное тестирование формы с ч�
   // 6. Проверить все состояния
   test('Полное заполнение формы с проверкой состояний', async ({ page }) => {
     // Чекбоксы
-    // твой код
-    // твой код
+    await page.getByLabel('Подписаться на рассылку').check();
+    await page.getByLabel('Я принимаю условия соглашения').check();
 
     // Группа интересов
-
-    // твой код
-    // твой код
-    // твой код
+    await page.getByLabel('Спорт').check();
+    await page.getByLabel('Музыка').uncheck();
+    await page.getByLabel('Кино').check();
 
     // Радио-кнопки
-    // твой код
+    await page.getByLabel('Почта России').check();
 
     // Кастомный элемент
     await page.locator('.tos-container').scrollIntoViewIfNeeded();
-    // твой код
+    await page.getByLabel('Я прочитал и согласен с условиями').check();
 
     // Проверки
     await expect(page.getByLabel('Подписаться на рассылку')).toBeChecked();
-    await expect(page.getByLabel('Почта России')).toBeChecked();
+    await expect(page.getByLabel('Я принимаю условия соглашения')).toBeChecked();
     await expect(page.getByLabel('Спорт')).toBeChecked();
     await expect(page.getByLabel('Музыка')).not.toBeChecked();
+    await expect(page.getByLabel('Кино')).toBeChecked();
+    await expect(page.getByLabel('Почта России')).toBeChecked();
+    await expect(page.getByLabel('Я прочитал и согласен с условиями')).toBeChecked();
   });
 });
